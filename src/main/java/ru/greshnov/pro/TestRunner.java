@@ -10,7 +10,7 @@ public class TestRunner{
 
     static String path = "ru.greshnov.pro.MyAnnotations$";
 
-    public static Map<TestResult, List<Test>> runTests(Class c) throws BadTestClassError, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    public static Map<TestResult, List<Test>> runTests(Class c) throws NoSuchMethodException, BadTestClassError {
 
         Map<TestResult, List<Test>> mapTest = new HashMap<>();
         mapTest.put(TestResult.Skipped, new ArrayList<>());
@@ -27,13 +27,15 @@ public class TestRunner{
 
         for (int i = 0; i < lstMeth.size(); i++) {
             try {
-                lstMeth.get(i).invoke(c.newInstance());
                 if (lstMeth.get(i).getAnnotation(MyAnnotations.Disabled.class) != null) {
                     mapTest.get(TestResult.Skipped).add(new Test(TestResult.Skipped,
                             getName(lstMeth.get(i)), null));
                 } else if (lstMeth.get(i).getAnnotation(MyAnnotations.Test.class) != null) {
+                    lstMeth.get(i).invoke(c.newInstance());
                     mapTest.get(TestResult.Success).add(new Test(TestResult.Success,
                             getName(lstMeth.get(i)), null));
+                } else {
+                    lstMeth.get(i).invoke(c.newInstance());
                 }
             } catch (Exception e) {
                 if (e.getCause() instanceof TestAssertionError) {

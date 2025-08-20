@@ -34,7 +34,7 @@ public class ForTest {
     }
     @MyAnnotations.Test (range = 7)
     public void eight () throws TestAssertionError {
-        System.out.println("second");
+        System.out.println("eight");
         throw new TestAssertionError("Error of Assertion");
     }
 }
